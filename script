@@ -1,0 +1,67 @@
+line
+0 0 0 100 100 0
+line
+100 100 0 100 200 0
+line
+100 200 0 30 300 0
+line
+30 300 0 0 300 0
+line
+0 300 0 0 0 0
+
+ident
+rotate
+y 90
+apply
+
+line
+0 0 0 100 100 0
+line
+100 100 0 100 200 0
+line
+100 200 0 30 300 0
+line
+30 300 0 0 300 0
+line
+0 300 0 0 0 0
+
+apply
+
+line
+0 0 0 100 100 0
+line
+100 100 0 100 200 0
+line
+100 200 0 30 300 0
+line
+30 300 0 0 300 0
+line
+0 300 0 0 0 0
+
+apply
+
+line
+0 0 0 100 100 0
+line
+100 100 0 100 200 0
+line
+100 200 0 30 300 0
+line
+30 300 0 0 300 0
+line
+0 300 0 0 0 0
+
+ident
+rotate
+y -30
+rotate
+x 130
+rotate
+z 50
+move
+200 300 0
+apply
+
+display
+save
+dart.ppm
