@@ -12,7 +12,7 @@ void add_circle(struct matrix * edges, double cx, double cy, double cz, double r
     double x0, y0, x1, y1;
     x0 = r + cx;
     y0 = cy;
-    for (t = step; t <= 1; t += step) {
+    for (t = step; t <= 1 + step; t += step) {
         x1 = r*cos(2*M_PI*t) + cx;
         y1 = r*sin(2*M_PI*t) + cy;
         add_edge(edges, x0, y0, cz, x1, y1, cz);
@@ -42,7 +42,7 @@ void add_curve(struct matrix * edges, double x0, double y0, double x1, double y1
     segment_x0 = dx;
     segment_y0 = dy;
 
-    for (t = step; t <= 1; t += step) {
+    for (t = step; t <= 1 + step; t += step) {
         segment_x1 = t*t*t*ax + t*t*bx + t*cx + dx;
         segment_y1 = t*t*t*ay + t*t*by + t*cy + dy;
         add_edge(edges, segment_x0, segment_y0, 0, segment_x1, segment_y1, 0);
