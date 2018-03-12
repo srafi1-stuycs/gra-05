@@ -1,20 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "ml6.h"
 #include "display.h"
 #include "draw.h"
 #include "matrix.h"
 
-/*======== void add_point() ==========
-Inputs:   struct matrix * points
-int x
-int y
-int z 
-Returns: 
-adds point (x, y, z) to points and increment points.lastcol
-if points is full, should call grow on points
-====================*/
+void add_circle(struct matrix * edges, double cx, double cy, double cz, double r, double step) {
+    double t;
+    double x0, y0, x1, y1;
+    x0 = r + cx;
+    y0 = cy;
+    for (t = step; t <= 1; t += step) {
+        x1 = r*cos(2*M_PI*t) + cx;
+        y1 = r*sin(2*M_PI*t) + cy;
+        add_edge(edges, x0, y0, cz, x1, y1, cz);
+        x0 = x1;
+        y0 = y1;
+    }
+}
+
+void add_curve(struct matrix * edges, double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, double step, int type) {
+    double t;
+    double segment_x0, segment_y0, segment_x1, segment_y1;
+
+    struct matrix * x_coefs = generate_curve_coefs(x0, x1, x2, x3, type);
+    double ax = x_coefs->m[0][0];
+    double bx = x_coefs->m[1][0];
+    double cx = x_coefs->m[2][0];
+    double dx = x_coefs->m[3][0];
+    free_matrix(x_coefs);
+
+    struct matrix * y_coefs = generate_curve_coefs(y0, y1, y2, y3, type);
+    double ay = y_coefs->m[0][0];
+    double by = y_coefs->m[1][0];
+    double cy = y_coefs->m[2][0];
+    double dy = y_coefs->m[3][0];
+    free_matrix(y_coefs);
+
+    segment_x0 = dx;
+    segment_y0 = dy;
+
+    for (t = step; t <= 1; t += step) {
+        segment_x1 = t*t*t*ax + t*t*bx + t*cx + dx;
+        segment_y1 = t*t*t*ay + t*t*by + t*cy + dy;
+        add_edge(edges, segment_x0, segment_y0, 0, segment_x1, segment_y1, 0);
+        segment_x0 = segment_x1;
+        segment_y0 = segment_y1;
+    }
+}
+
 void add_point( struct matrix * points, double x, double y, double z) {
 
     if ( points->lastcol == points->cols )
@@ -27,13 +63,6 @@ void add_point( struct matrix * points, double x, double y, double z) {
     points->lastcol++;
 } //end add_point
 
-/*======== void add_edge() ==========
-Inputs:   struct matrix * points
-int x0, int y0, int z0, int x1, int y1, int z1
-Returns: 
-add the line connecting (x0, y0, z0) to (x1, y1, z1) to points
-should use add_point
-====================*/
 void add_edge( struct matrix * points, 
         double x0, double y0, double z0, 
         double x1, double y1, double z1) {
@@ -41,14 +70,6 @@ void add_edge( struct matrix * points,
     add_point( points, x1, y1, z1 );
 }
 
-/*======== void draw_lines() ==========
-Inputs:   struct matrix * points
-screen s
-color c 
-Returns: 
-Go through points 2 at a time and call draw_line to add that line
-to the screen
-====================*/
 void draw_lines( struct matrix * points, screen s, color c) {
 
     if ( points->lastcol < 2 ) {
@@ -64,14 +85,6 @@ void draw_lines( struct matrix * points, screen s, color c) {
                 points->m[1][point+1],
                 s, c);	       
 }// end draw_lines
-
-
-
-
-
-
-
-
 
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 

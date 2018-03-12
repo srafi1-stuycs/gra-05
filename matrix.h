@@ -1,6 +1,9 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#define HERMITE 0
+#define BEZIER 1
+
 struct matrix {
   double **m;
   int rows, cols;
@@ -23,5 +26,9 @@ void copy_matrix(struct matrix *a, struct matrix *b);
 void print_matrix(struct matrix *m);
 void ident(struct matrix *m);
 void matrix_mult(struct matrix *a, struct matrix *b);
+
+struct matrix * generate_curve_coefs(double p1, double p2, double p3, double p4, int type);
+struct matrix * make_bezier();
+struct matrix * make_hermite();
 
 #endif
